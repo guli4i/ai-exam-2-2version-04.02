@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}AI Exam Generator{% endblock %}
+
+{% block content %}
+
+<style>
+.hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.fade-up {
+  animation: fadeUp 1.2s ease forwards;
+  opacity: 0;
+}
+
+.fade-up.delay-1 { animation-delay: .3s }
+.fade-up.delay-2 { animation-delay: .6s }
+.fade-up.delay-3 { animation-delay: .9s }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.glow {
+  background: radial-gradient(circle at top, #6366f1, transparent 60%);
+  filter: blur(120px);
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+</style>
+
+<div class="glow"></div>
+
+<div class="hero">
+  <div class="row align-items-center w-100">
+
+    <div class="col-md-7">
+      <h1 class="fw-bold display-4 fade-up">
+        AI Exam Generator
+      </h1>
+
+      <p class="lead muted mt-3 fade-up delay-1">
+        Generate exams, tests and MCQ questions from educational materials
+        using artificial intelligence.
+      </p>
+
+      <div class="mt-4 fade-up delay-2">
+       <a href="/generator" class="btn btn-primary btn-lg px-4">
+  Get started
+</a>
+
+        <a href="/about" class="btn btn-outline-secondary btn-lg ms-2">
+          How it works
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-5 fade-up delay-3">
+      <div class="card p-4">
+        <h5 class="mb-3">What you can do</h5>
+        <ul class="muted">
+          <li>Upload PDF or DOCX files</li>
+          <li>Generate MCQ & open questions</li>
+          <li>Export exams to PDF & DOCX</li>
+          <li>Store generation history</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

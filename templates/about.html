@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}How it works{% endblock %}
+
+{% block content %}
+
+<h1 class="fw-bold mb-4">How the system works</h1>
+
+<div class="row g-4">
+
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h5>1. Input material</h5>
+      <p class="muted">
+        User uploads a PDF/DOCX file or pastes educational text.
+        The system extracts and normalizes textual content.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h5>2. Text processing</h5>
+      <p class="muted">
+        The text is preprocessed, cleaned, and limited to ensure
+        stable generation.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h5>3. Question generation</h5>
+      <p class="muted">
+        AI models generate open-ended questions or multiple-choice
+        tests based on extracted concepts.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h5>4. Export & storage</h5>
+      <p class="muted">
+        Generated exams can be exported to PDF or DOCX format
+        and stored in history.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

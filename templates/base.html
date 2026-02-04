@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}AI Exam{% endblock %}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+  background: #020617;
+  color: #94a3b8;
+}
+
+.card {
+  background: #020617;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+/* ===== EXAM TEXT ===== */
+.question-text {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.option-text {
+  color: #e5e7eb;
+}
+
+.exam-card {
+  background: #020617;
+}
+
+/* navbar */
+.navbar {
+  background: #020617;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark px-4">
+  <a class="navbar-brand" href="/">AI Exam</a>
+  <div>
+    <a class="nav-link d-inline text-light" href="/generator">Generator</a>
+    <a class="nav-link d-inline text-light" href="/history_page">History</a>
+    <a class="nav-link d-inline text-light" href="/about">About</a>
+  </div>
+</nav>
+
+<div class="container my-5">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
+0

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+<h2 class="question-text mb-4">Exam history</h2>
+
+{% for h in history %}
+  <div class="card exam-card p-3 mb-3">
+    <div class="question-text">
+      {{ h.type | upper }} — {{ h.time }}
+    </div>
+    <a href="/exam/{{ loop.index0 }}" class="btn btn-sm btn-outline-primary mt-2">
+      View
+    </a>
+  </div>
+{% endfor %}
+
+{% endblock %}

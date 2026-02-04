@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Exam Generator{% endblock %}
+
+{% block content %}
+
+<h1 class="fw-bold mb-2">AI Exam Generator</h1>
+<p class="muted mb-4">Generate MCQ and open questions</p>
+
+<div class="card p-4 mb-4">
+
+  <input type="file"
+         class="form-control mb-3"
+         accept=".pdf,.docx"
+         onchange="uploadFile(this)">
+
+  <textarea id="text"
+            class="form-control mb-3"
+            rows="5"
+            placeholder="Paste source text here"></textarea>
+
+  <div class="row g-2 align-items-center">
+    <div class="col-md-3">
+      <input id="count"
+             type="number"
+             class="form-control"
+             value="5"
+             min="1">
+    </div>
+
+    <div class="col-md-9 d-flex gap-2 flex-wrap">
+      <button class="btn btn-outline-info" onclick="generateOpen()">Open</button>
+      <button class="btn btn-primary" onclick="generateMCQ()">MCQ</button>
+      <button class="btn btn-success" onclick="showAnswers()">Answers</button>
+      <button class="btn btn-outline-primary" onclick="downloadDocx()">DOCX</button>
+      <button class="btn btn-outline-danger" onclick="downloadPdf()">PDF</button>
+    </div>
+  </div>
+</div>
+
+<div id="loader" class="text-center my-4" style="display:none">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<div id="result"></div>
+
+<script>
+let mcq = [];
+let lastQuestions = [];
+
+function show(v){
+  document.getElementById("loader").style.display = v ? "block" : "none";
+}
+
+async function uploadFile(input){
+  const fd = new FormData();
+  fd.append("file", input.files[0]);
+  show(true);
+  const r = await fetch("/upload_file", { method:"POST", body:fd });
+  const d = await r.json();
+  text.value = d.text || "";
+  show(false);
+}
+
+async function generateOpen(){
+  show(true);
+  const r = await fetch("/generate_open",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ text:text.value, count:+count.value })
+  });
+  const d = await r.json();
+  lastQuestions = d.questions;
+  mcq = [];
+  result.innerHTML = "";
+
+  d.questions.forEach((q,i)=>{
+    result.innerHTML += `<div class="card p-3 mb-2"><div class="card question-card p-3 mb-3">
+  <b class="question-text">${i+1}. ${q}</b>
+</div>
+</div>`;
+  });
+  show(false);
+}
+
+async function generateMCQ(){
+  show(true);
+  const r = await fetch("/generate_mcq",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ text:text.value, count:+count.value })
+  });
+
+  const d = await r.json();
+
+  mcq = d.questions;
+  lastQuestions = mcq;   // 🔥 КРИТИЧЕСКАЯ СТРОКА
+  result.innerHTML = "";
+
+  mcq.forEach((q,i)=>{
+    result.innerHTML += `
+      <div class="card p-3 mb-3">
+        <b>${i+1}. ${q.question}</b>
+        <ul>
+          ${q.options.map((o,idx)=>`
+            <li>${String.fromCharCode(65+idx)}. ${o}</li>
+          `).join("")}
+        </ul>
+      </div>`;
+  });
+  show(false);
+}
+
+function showAnswers(){
+  if (!mcq.length) return;
+  result.innerHTML = "";
+
+  mcq.forEach((q,i)=>{
+    const answers = q.answer_indices
+      .map(i => String.fromCharCode(65+i))
+      .join(", ");
+
+    result.innerHTML += `
+      <div class="card p-3 mb-3">
+        <b>${i+1}. ${q.question}</b>
+        <ul>
+          ${q.options.map((o,idx)=>`
+            <li>${String.fromCharCode(65+idx)}. ${o}</li>
+          `).join("")}
+        </ul>
+        <p class="text-success">
+          Correct answers: ${answers}
+        </p>
+        <p class="muted">${q.explanation}</p>
+      </div>`;
+  });
+}
+
+async function downloadDocx(){
+  if (!lastQuestions.length) return alert("No questions to export");
+
+  const r = await fetch("/download_docx",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ questions:lastQuestions })
+  });
+
+  const blob = await r.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "exam.docx";
+  a.click();
+}
+
+async function downloadPdf(){
+  if (!lastQuestions.length) return alert("No questions to export");
+
+  const r = await fetch("/download_pdf",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ questions:lastQuestions })
+  });
+
+  const blob = await r.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "exam.pdf";
+  a.click();
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Exam view{% endblock %}
+
+{% block content %}
+
+<h1 class="fw-bold mb-3">{{ exam.type | upper }} Exam</h1>
+<p class="muted mb-4">Generated: {{ exam.time }}</p>
+
+{% for q in exam.questions %}
+  <div class="card p-3 mb-3">
+    {% if q.question %}
+      <b>{{ loop.index }}. {{ q.question }}</b>
+      <ul class="mt-2">
+        {% for o in q.options %}
+          <li>{{ o }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <b>{{ loop.index }}. {{ q }}</b>
+    {% endif %}
+  </div>
+{% endfor %}
+
+<a href="/history_page" class="btn btn-outline-secondary mt-3">
+  ← Back to history
+</a>
+
+{% endblock %}
